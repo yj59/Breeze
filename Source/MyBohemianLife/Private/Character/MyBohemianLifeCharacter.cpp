@@ -117,6 +117,9 @@ void AMyBohemianLifeCharacter::SetupPlayerInputComponent(class UInputComponent* 
 		// Sprinting
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AMyBohemianLifeCharacter::SetJogMovement);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AMyBohemianLifeCharacter::SetWalkMovement);
+
+		// Crouching
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMyBohemianLifeCharacter::SetCrouch);
 	}
 
 }
@@ -181,6 +184,11 @@ void AMyBohemianLifeCharacter::SetWalkMovement(const FInputActionValue& Value)
 {
 	BohemianMovementComp->SprintReleased();
 	//GetCharacterMovement()->MaxWalkSpeed = 550.f;
+}
+
+void AMyBohemianLifeCharacter::SetCrouch(const FInputActionValue& Value)
+{
+	BohemianMovementComp->CrouchPressed();
 }
 
 void AMyBohemianLifeCharacter::Look(const FInputActionValue& Value)

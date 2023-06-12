@@ -49,6 +49,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* CrouchAction;
 	
 	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	// class UInputAction* LookUpAction;
@@ -62,7 +65,6 @@ public:
 	virtual void PostInitializeComponents() override;
 
 protected:
-
 	/** Called for movement input */
 	void MoveForward(const FInputActionValue& Value);
 	void MoveRight(const FInputActionValue& Value);
@@ -71,8 +73,12 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+	/** Called for Sprinting input */
 	void SetJogMovement(const FInputActionValue& Value);
 	void SetWalkMovement(const FInputActionValue& Value);
+
+	/** Called for Crouch input */
+	void SetCrouch(const FInputActionValue& Value);
 	
 
 protected:
@@ -87,5 +93,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	/** Returns BohemianMovementComponent subobject **/
+	UFUNCTION(BlueprintPure) FORCEINLINE UBohemianMovementComponent* GetBohemianMovement() const { return BohemianMovementComp; }
 };
 

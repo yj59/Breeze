@@ -5,6 +5,8 @@
 
 #include "GameFramework/Character.h"
 
+#pragma region Saved Move
+
 // UBohemianMovementComponent::FSavedMove_Bohemian::FSavedMove_Bohemian()
 // {
 // 	Saved_bWantsToSprint=0;
@@ -57,6 +59,10 @@ void UBohemianMovementComponent::FSavedMove_Bohemian::PrepMoveFor(ACharacter* C)
 	CharacterMovement->Safe_bWantsToSprint = Saved_bWantsToSprint;
 }
 
+#pragma endregion
+
+#pragma region Client Network Prediction Data
+
 UBohemianMovementComponent::FNetworkPredictionData_Client_Bohemian::FNetworkPredictionData_Client_Bohemian(const UCharacterMovementComponent& ClientMovement)
 : Super(ClientMovement)
 {
@@ -65,6 +71,15 @@ UBohemianMovementComponent::FNetworkPredictionData_Client_Bohemian::FNetworkPred
 FSavedMovePtr UBohemianMovementComponent::FNetworkPredictionData_Client_Bohemian::AllocateNewMove()
 {
 	return FSavedMovePtr(new FSavedMove_Bohemian());
+}
+
+#pragma endregion
+
+#pragma region CMC
+
+UBohemianMovementComponent::UBohemianMovementComponent()
+{
+	NavAgentProps.bCanCrouch = true;
 }
 
 FNetworkPredictionData_Client* UBohemianMovementComponent::GetPredictionData_Client() const
@@ -80,6 +95,13 @@ FNetworkPredictionData_Client* UBohemianMovementComponent::GetPredictionData_Cli
 		MutableThis->ClientPredictionData->NoSmoothNetUpdateDist = 140.f; 
 	}
 	return ClientPredictionData;
+}
+
+void UBohemianMovementComponent::OnClientCorrectionReceived(FNetworkPredictionData_Client_Character& ClientData,
+	float TimeStamp, FVector NewLocation, FVector NewVelocity, UPrimitiveComponent* NewBase, FName NewBaseBoneName,
+	bool bHasBase, bool bBaseRelativePosition, uint8 ServerMovementMode)
+{
+	Super::OnClientCorrectionReceived(ClientData, TimeStamp, NewLocation, NewVelocity, NewBase, NewBaseBoneName, bHasBase, bBaseRelativePosition, ServerMovementMode);
 }
 
 void UBohemianMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
@@ -108,28 +130,23 @@ void UBohemianMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVe
 	}
 }
 
+#pragma endregion
+
 void UBohemianMovementComponent::SprintPressed()
 {
 	Safe_bWantsToSprint = true;
-	
 }
 
 void UBohemianMovementComponent::SprintReleased()
 {
 	Safe_bWantsToSprint = false;
-	
 }
 
-// void UBohemianMovementComponent::OnClientCorrectionReceived(FNetworkPredictionData_Client_Character& ClientData,
-// 	float TimeStamp, FVector NewLocation, FVector NewVelocity, UPrimitiveComponent* NewBase, FName NewBaseBoneName,
-// 	bool bHasBase, bool bBaseRelativePosition, uint8 ServerMovementMode)
-// {
-// 	Super::OnClientCorrectionReceived(ClientData, TimeStamp, NewLocation, NewVelocity, NewBase, NewBaseBoneName,
-// 	                                  bHasBase, bBaseRelativePosition,
-// 	                                  ServerMovementMode);
-// }
-
-UBohemianMovementComponent::UBohemianMovementComponent()
+void UBohemianMovementComponent::CrouchPressed()
 {
-	
+	bWantsToCrouch = !bWantsToCrouch;
 }
+
+
+
+
