@@ -85,7 +85,8 @@ protected:
 	void SetWalkMovement(const FInputActionValue& Value);
 
 	/** Called for Crouch input */
-	void SetCrouch(const FInputActionValue& Value);
+	void SetCrouchPressed(const FInputActionValue& Value);
+	void SetCrouchReleased(const FInputActionValue& Value);
 
 public:
 	FCollisionQueryParams GetIgnoreCharacterParams() const;

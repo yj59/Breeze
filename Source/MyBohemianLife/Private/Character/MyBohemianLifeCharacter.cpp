@@ -119,7 +119,8 @@ void AMyBohemianLifeCharacter::SetupPlayerInputComponent(class UInputComponent* 
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AMyBohemianLifeCharacter::SetWalkMovement);
 
 		// Crouching
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMyBohemianLifeCharacter::SetCrouch);
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMyBohemianLifeCharacter::SetCrouchPressed);
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Completed, this, &AMyBohemianLifeCharacter::SetCrouchReleased);
 	}
 
 }
@@ -186,9 +187,14 @@ void AMyBohemianLifeCharacter::SetWalkMovement(const FInputActionValue& Value)
 	//GetCharacterMovement()->MaxWalkSpeed = 550.f;
 }
 
-void AMyBohemianLifeCharacter::SetCrouch(const FInputActionValue& Value)
+void AMyBohemianLifeCharacter::SetCrouchPressed(const FInputActionValue& Value)
 {
 	BohemianMovementComp->CrouchPressed();
+}
+
+void AMyBohemianLifeCharacter::SetCrouchReleased(const FInputActionValue& Value)
+{
+	BohemianMovementComp->CrouchReleased();
 }
 
 FCollisionQueryParams AMyBohemianLifeCharacter::GetIgnoreCharacterParams() const
