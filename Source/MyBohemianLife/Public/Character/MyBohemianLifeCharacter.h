@@ -65,6 +65,13 @@ public:
 	virtual void PostInitializeComponents() override;
 
 protected:
+	// APawn interface
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	// To add mapping context
+	virtual void BeginPlay();
+	
+protected:
 	/** Called for movement input */
 	void MoveForward(const FInputActionValue& Value);
 	void MoveRight(const FInputActionValue& Value);
@@ -79,15 +86,10 @@ protected:
 
 	/** Called for Crouch input */
 	void SetCrouch(const FInputActionValue& Value);
-	
 
-protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+public:
+	FCollisionQueryParams GetIgnoreCharacterParams() const;
 	
-	// To add mapping context
-	virtual void BeginPlay();
-
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

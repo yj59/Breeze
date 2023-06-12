@@ -191,6 +191,18 @@ void AMyBohemianLifeCharacter::SetCrouch(const FInputActionValue& Value)
 	BohemianMovementComp->CrouchPressed();
 }
 
+FCollisionQueryParams AMyBohemianLifeCharacter::GetIgnoreCharacterParams() const
+{
+	FCollisionQueryParams Params;
+
+	TArray<AActor*> CharacterChildren;
+	GetAllChildActors(CharacterChildren);
+	Params.AddIgnoredActors(CharacterChildren);
+	Params.AddIgnoredActor(this);
+
+	return Params;
+}
+
 void AMyBohemianLifeCharacter::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
