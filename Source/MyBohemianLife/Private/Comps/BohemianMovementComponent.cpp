@@ -274,12 +274,21 @@ void UBohemianMovementComponent::PhysSlide(float deltaTime, int32 Iterations)
 	{
 		return;
 	}
+
 	
+	if (!CanSlide())
+	{
+		SetMovementMode(MOVE_Walking);
+		StartNewPhysics(deltaTime, Iterations);
+		return;
+	}
+
 	bJustTeleported = false;
 	bool bCheckedFall = false;
 	bool bTriedLedgeMove = false;
 	float remainingTime = deltaTime;
 
+	// Perform the move
 	while ( (remainingTime >= MIN_TICK_TIME) && (Iterations < MaxSimulationIterations) && CharacterOwner && (CharacterOwner->Controller || bRunPhysicsWithNoController || (CharacterOwner->GetLocalRole() == ROLE_SimulatedProxy)) )
 	{
 		Iterations++;
@@ -465,14 +474,14 @@ void UBohemianMovementComponent::PhysSlide(float deltaTime, int32 Iterations)
 	SafeMoveUpdatedComponent(FVector::ZeroVector, NewRotation, false, Hit);
 }
 
-bool UBohemianMovementComponent::GetSlideSurface(FHitResult& Hit) const
-{
-	FVector Start = UpdatedComponent->GetComponentLocation();
-	FVector End = Start + CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * 2.f * FVector::DownVector;
-	FName ProfileName = TEXT("BlockAll");
-
-	return GetWorld()->LineTraceSingleByProfile(Hit, Start, End, ProfileName, BohemianLifeCharacter->GetIgnoreCharacterParams());
-}
+// bool UBohemianMovementComponent::GetSlideSurface(FHitResult& Hit) const
+// {
+// 	FVector Start = UpdatedComponent->GetComponentLocation();
+// 	FVector End = Start + CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * 2.f * FVector::DownVector;
+// 	FName ProfileName = TEXT("BlockAll");
+//
+// 	return GetWorld()->LineTraceSingleByProfile(Hit, Start, End, ProfileName, BohemianLifeCharacter->GetIgnoreCharacterParams());
+// }
 
 #pragma endregion
 
@@ -588,6 +597,7 @@ void UBohemianMovementComponent::PhysProne(float deltaTime, int32 Iterations)
 		{
 			FindFloor(UpdatedComponent->GetComponentLocation(), CurrentFloor, bZeroDelta, NULL);
 		}
+
 
 		// check for ledges here
 		const bool bCheckLedges = !CanWalkOffLedges();

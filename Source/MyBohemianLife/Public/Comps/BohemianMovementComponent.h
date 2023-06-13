@@ -35,7 +35,8 @@ class MYBOHEMIANLIFE_API UBohemianMovementComponent : public UCharacterMovementC
 		
 		// Flag
 		uint8 Saved_bWantsToSprint:1;
-		
+
+		// Other Variables
 		uint8 Saved_bPrevWantsToCrouch:1;
 		uint8 Saved_bWantsToProne:1;
 
@@ -87,7 +88,6 @@ class MYBOHEMIANLIFE_API UBohemianMovementComponent : public UCharacterMovementC
 	
 	/** Transient */
 	UPROPERTY(Transient) AMyBohemianLifeCharacter* BohemianLifeCharacter;
-	
 	bool Safe_bWantsToSprint;
 	bool Safe_bPrevWantsToCrouch;
 	bool Safe_bWantsToProne;
@@ -103,7 +103,7 @@ protected:
 
 public:
 	virtual FNetworkPredictionData_Client* GetPredictionData_Client() const override;
-
+	
 	virtual bool IsMovingOnGround() const override;
 	virtual bool CanCrouchInCurrentState() const override;
 	virtual float GetMaxSpeed() const override;
@@ -125,13 +125,12 @@ private:
 	void ExitSlide();
 	bool CanSlide() const;
 	void PhysSlide(float deltaTime, int32 Iterations);
-	bool GetSlideSurface(FHitResult& Hit) const;
+	// bool GetSlideSurface(FHitResult& Hit) const;
 
 	/** Prone */
 	void TryEnterProne() { Safe_bWantsToProne = true; }
 	
-	UFUNCTION(Server, Reliable)
-	void Server_EnterProne();
+	UFUNCTION(Server, Reliable) void Server_EnterProne();
 	
 	void EnterProne(EMovementMode PrevMode, ECustomMovementMode PrevCustomMode);
 	void ExitProne();
@@ -144,7 +143,7 @@ public:
 
 	UFUNCTION(BlueprintCallable) void CrouchPressed();
 	UFUNCTION(BlueprintCallable) void CrouchReleased();
-	
-	UFUNCTION(BlueprintPure) bool IsCustomMovementMode(ECustomMovementMode InCustomMovementMode) const; 
+
+	UFUNCTION(BlueprintPure) bool IsCustomMovementMode(ECustomMovementMode InCustomMovementMode) const;
 	UFUNCTION(BlueprintPure) bool IsMovementMode(EMovementMode InMovementMode) const;
 };
